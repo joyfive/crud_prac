@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getPostList } from "../axios";
 import Card from "../elements/Card";
 import List from "../elements/List";
 
@@ -7,9 +6,7 @@ const Main = () => {
   const [posts, setPosts] = useState([]);
 
   const updateUi = async () => {
-    const response = await getPostList();
-
-    setPosts(response.data);
+    // TODO: 업데이트 코드 작성 예정
   };
 
   useEffect(() => {

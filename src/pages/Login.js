@@ -1,7 +1,3 @@
-import { useDispatch } from "react-redux";
-import { setToken } from "../redux/modules/user";
-import { requestLogin } from "../axios/index";
-import { useNavigate } from "react-router-dom";
 import Input from "../elements/Input";
 import styled from "styled-components";
 import Button from "../elements/Button";
@@ -14,25 +10,12 @@ const INIT = {
 };
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const [account, setAccount] = useInputForm(INIT);
   const [validation] = useValidation(account);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await requestLogin(account);
-
-      const token = response.headers.authorization;
-
-      dispatch(setToken(token));
-      navigate("/");
-    } catch (error) {
-      alert("로그인 실패, 아이디나 비밀번호를 확인해주세요.");
-    }
+    //TODO: 로그인 코드 작성 예정
   };
 
   return (

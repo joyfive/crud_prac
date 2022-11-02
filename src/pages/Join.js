@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { createUser } from "../axios";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
 import useInputForm from "../hooks/useInputForm";
@@ -13,22 +10,12 @@ const INIT = {
 };
 
 const Join = () => {
-  const navigate = useNavigate();
-
   const [account, setAccount] = useInputForm(INIT);
   const [validation] = useValidation(account);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
-    try {
-      await createUser(account);
-
-      alert("회원가입에 성공하였습니다.");
-      navigate("/");
-    } catch (error) {
-      alert("회원가입에 실패하였습니다.");
-    }
+    //TODO: 회원가입 코드 작성 예정
   };
 
   return (
