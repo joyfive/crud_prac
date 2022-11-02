@@ -24,7 +24,6 @@ const Detail = () => {
 
   const updateUi = useCallback(async () => {
     const response = await getPost(id);
-
     setPost(response.data);
   }, [id]);
 
@@ -39,8 +38,12 @@ const Detail = () => {
     <DetailView>
       <Title>{post.title}</Title>
       <Contents>{post.contents}</Contents>
-      <Button onClick={onDeletePost}>삭제</Button>
-      <Button onClick={() => navigate(`/post/${id}/edit`)}>수정하기</Button>
+      {post.myPost && (
+        <>
+          <Button onClick={onDeletePost}>삭제</Button>
+          <Button onClick={() => navigate(`/post/${id}/edit`)}>수정하기</Button>
+        </>
+      )}
     </DetailView>
   );
 };
