@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useInputForm from "../hooks/useInputForm";
 import useValidation from "../hooks/useValidation";
 import Input from "../elements/Input";
@@ -6,6 +6,7 @@ import Button from "../elements/Button";
 import styled from "styled-components";
 import TextArea from "../elements/TextArea";
 import { useCallback, useEffect, useMemo } from "react";
+import { createPost, getPost, updatePost } from "../axios/index";
 
 const INIT = {
   title: "",
@@ -14,6 +15,7 @@ const INIT = {
 
 const Post = () => {
   const { id, edit } = useParams();
+  const navigate = useNavigate();
   const [postData, setPostData, setInit] = useInputForm(INIT);
   const [validation] = useValidation(postData);
 
@@ -21,12 +23,25 @@ const Post = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    //TODO: 게시물 작성 코드 작성 예정
+
+    try {
+      if (isEdit) {
+        await updatePost(id, postData);
+      } else {
+        await createPost(postData);
+      }
+      alert("게시물작성에 성공하였습니다.");
+      navigate("/");
+    } catch (error) {
+      alert("게시물작에 실패하였습니다.");
+    }
   };
 
   const updateUi = useCallback(async () => {
-    //TODO: 업데이트 코드 작성 예정
-  }, []);
+    const post = await getPost(id);
+
+    setInit(post.data);
+  }, [id, setInit]);
 
   useEffect(() => {
     if (isEdit) {
