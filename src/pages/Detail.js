@@ -1,7 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import { getPost } from "../axios";
-import { deletePost } from "../axios/index";
 import styled from "styled-components";
 import Button from "../elements/Button";
 
@@ -11,21 +9,17 @@ const Detail = () => {
 
   const [post, setPost] = useState();
 
-  const onDeletePost = async () => {
-    try {
-      await deletePost(id);
+  const navigateUpdate = useCallback(() => {
+    navigate(`/post/${id}/edit`);
+  }, [id, navigate]);
 
-      alert("게시물을 삭제하였습니다.");
-      navigate("/");
-    } catch (error) {
-      alert("게시물 삭제에 실패하였습니다.");
-    }
-  };
+  const onDeletePost = useCallback(async () => {
+    //TODO: 삭제 코드 작성 예정
+  }, []);
 
   const updateUi = useCallback(async () => {
-    const response = await getPost(id);
-    setPost(response.data);
-  }, [id]);
+    //TODO: 조회 코드 작성 예정
+  }, []);
 
   useEffect(() => {
     updateUi();
@@ -34,6 +28,7 @@ const Detail = () => {
   if (!post) {
     return null;
   }
+  
   return (
     <DetailView>
       <Title>{post.title}</Title>
@@ -41,7 +36,7 @@ const Detail = () => {
       {post.myPost && (
         <>
           <Button onClick={onDeletePost}>삭제</Button>
-          <Button onClick={() => navigate(`/post/${id}/edit`)}>수정하기</Button>
+          <Button onClick={navigateUpdate}>수정하기</Button>
         </>
       )}
     </DetailView>
