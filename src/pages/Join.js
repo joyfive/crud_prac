@@ -3,6 +3,8 @@ import Button from "../elements/Button";
 import Input from "../elements/Input";
 import useInputForm from "../hooks/useInputForm";
 import useValidation from "../hooks/useValidation";
+import { createUser } from "../axios/index";
+import { useNavigate } from 'react-router-dom';
 
 const INIT = {
   nickname: "",
@@ -10,12 +12,22 @@ const INIT = {
 };
 
 const Join = () => {
+  const navigate = useNavigate();
   const [account, setAccount] = useInputForm(INIT);
   const [validation] = useValidation(account);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     //TODO: 회원가입 코드 작성 예정
+
+    try {
+      await createUser(account);
+
+      alert("회원가입에 성공하였습니다.")
+      navigate('/')
+    } catch (error) {
+      alert("에러가 발생하였습니다.")
+    }
   };
 
   return (
