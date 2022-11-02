@@ -1,33 +1,26 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { requestLogin } from "../../axios/index";
+import { createSlice } from "@reduxjs/toolkit";
+import { delStorage, setStorage } from "../../common";
 
 const initialState = {
   token: null,
 };
-
-export const __requestLogin = createAsyncThunk(
-  "__requestLogin",
-  async (payload, thunkAPI) => {
-    const response = await requestLogin(payload);
-
-    const token = response.headers.Authorization;
-
-    localStorage.setItem("token", token);
-
-    thunkAPI.dispatch(setToken(token));
-  }
-);
 
 export const userSlice = createSlice({
   name: "userSlice",
   initialState,
   reducers: {
     setToken: (state, action) => {
+      setStorage("token", action.payload);
+
       state.token = action.payload;
     },
+    clearToken: (state) => {
+      delStorage("token");
+
+      state.token = null;
+    },
   },
-  extraReducers: {},
 });
 
-export const { setToken } = userSlice.actions;
+export const { setToken, clearToken } = userSlice.actions;
 export default userSlice.reducer;

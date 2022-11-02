@@ -7,7 +7,9 @@ const instance = axios.create({
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
-  config.headers["authorization"] = `Bearer ${token}`;
+  if (token) {
+    config.headers["authorization"] = `Bearer ${token}`;
+  }
 
   return config;
 });
@@ -39,12 +41,7 @@ export const getPost = async (postId) => {
 };
 
 export const updatePost = async (postId, post) => {
-  const test = {
-    title: "dkqwodkqwpodkpoqwdk",
-    contents: "dioqw39012839012",
-  };
-  // await instance.put(`post/${postId}`, post);
-  await instance.put(`posts/${postId}`, test);
+  await instance.put(`posts/${postId}`, post);
 };
 
 export const deletePost = async (postId) => {

@@ -1,8 +1,12 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setToken } from "../redux/modules/user";
 import { requestLogin } from "../axios/index";
 import { useNavigate } from "react-router-dom";
+import Input from "../elements/Input";
+import styled from "styled-components";
+import Button from "../elements/Button";
+import useValidation from "../hooks/useValidation";
+import useInputForm from "../hooks/useInputForm";
 
 const INIT = {
   nickname: "",
@@ -10,52 +14,53 @@ const INIT = {
 };
 
 const Login = () => {
-  const [account, setAccount] = useState(INIT);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-
-    setAccount((prev) => {
-      return { ...prev, [name]: value };
-    });
-  };
+  const [account, setAccount] = useInputForm(INIT);
+  const [validation] = useValidation(account);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    const response = await requestLogin(account);
+    try {
+      const response = await requestLogin(account);
 
-    const token = response.headers.authorization;
+      const token = response.headers.authorization;
 
-    localStorage.setItem("token", token);
-
-    dispatch(setToken(token));
-    navigate("/");
+      dispatch(setToken(token));
+      navigate("/");
+    } catch (error) {
+      alert("로그인 실패, 아이디나 비밀번호를 확인해주세요.");
+    }
   };
 
   return (
-    <div>
-      로그인
-      <form onSubmit={onSubmitHandler}>
-        <input
-          name="nickname"
-          type="text"
-          onChange={onChangeHandler}
-          placeholder="닉네임"
-        />
-        <input
-          name="password"
-          type="password"
-          onChange={onChangeHandler}
-          placeholder="비밀번호"
-        />
-        <button type={"submit"}>로그인</button>
-      </form>
-    </div>
+    <FormView onSubmit={onSubmitHandler}>
+      <h1>로그인</h1>
+      <Input
+        name="nickname"
+        type="text"
+        onChange={setAccount}
+        placeholder="아이디"
+      />
+      <Input
+        name="password"
+        type="password"
+        onChange={setAccount}
+        placeholder="비밀번호"
+      />
+      <Button disabled={!validation} type="submit">
+        로그인
+      </Button>
+    </FormView>
   );
 };
 
 export default Login;
+
+const FormView = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
